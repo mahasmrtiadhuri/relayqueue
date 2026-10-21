@@ -1,0 +1,15 @@
+services:
+  api:
+    build: .
+    ports: ["127.0.0.1:8080:8080"]
+    environment:
+      RELAYQUEUE_TOKEN: ${RELAYQUEUE_TOKEN:?Set RELAYQUEUE_TOKEN}
+    volumes: ["queue-data:/data"]
+    restart: unless-stopped
+  worker:
+    build: .
+    command: ["python", "worker.py", "--db", "/data/relayqueue.db"]
+    volumes: ["queue-data:/data"]
+    restart: unless-stopped
+volumes:
+  queue-data:
